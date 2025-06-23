@@ -75,6 +75,7 @@ struct em8051
     em8051decoder dec[256]; // opcode-to-string decoder handlers    
     em8051exception except; // callback: exceptional situation occurred
     em8051sfrread sfrread[128]; // callback array: SFR register being read
+    em8051sfrread sfrbitread[128]; // callback array: SFR register bits being read
     em8051sfrwrite sfrwrite[128]; // callback array: SFR register written
     em8051xread xread; // callback: external memory being read
     em8051xwrite xwrite; // callback: external memory being written
@@ -96,7 +97,7 @@ struct em8051
 // set the emulator into reset state. Must be called before tick(), as
 // it also initializes the function pointers. aWipe tells whether to reset
 // all memory to zero.
-void reset(struct em8051 *aCPU, bool aWipe);
+void reset(struct em8051 *aCPU, bool aWipeRAM, bool aWipeROM);
 
 // run one emulator tick, or 12 hardware clock cycles.
 // returns "true" if a new operation was executed.

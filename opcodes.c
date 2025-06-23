@@ -313,11 +313,15 @@ static uint8_t jb_bitaddr_offset(struct em8051 *aCPU)
         uint8_t bitaddr = address & 7;
         uint8_t bitmask = (1 << bitaddr);
         uint8_t value;
-        address &= 0xf8;        
-        if (aCPU->sfrread[address - 0x80])
-            value = aCPU->sfrread[address - 0x80](aCPU, address);
-        else
-            value = aCPU->mSFR[address - 0x80];
+        if (aCPU->sfrbitread[address - 0x80])
+            value = aCPU->sfrbitread[address - 0x80](aCPU, address);
+        else {
+            address &= 0xf8;
+            if (aCPU->sfrread[address - 0x80])
+                value = aCPU->sfrread[address - 0x80](aCPU, address);
+            else
+                value = aCPU->mSFR[address - 0x80];
+        }
         
         if (value & bitmask)
         {
@@ -395,11 +399,15 @@ static uint8_t jnb_bitaddr_offset(struct em8051 *aCPU)
         uint8_t bitaddr = address & 7;
         uint8_t bitmask = (1 << bitaddr);
         uint8_t value;
-        address &= 0xf8;        
-        if (aCPU->sfrread[address - 0x80])
-            value = aCPU->sfrread[address - 0x80](aCPU, address);
-        else
-            value = aCPU->mSFR[address - 0x80];
+        if (aCPU->sfrbitread[address - 0x80])
+            value = aCPU->sfrbitread[address - 0x80](aCPU, address);
+        else {
+            address &= 0xf8;
+            if (aCPU->sfrread[address - 0x80])
+                value = aCPU->sfrread[address - 0x80](aCPU, address);
+            else
+                value = aCPU->mSFR[address - 0x80];
+        }
         
         if (!(value & bitmask))
         {

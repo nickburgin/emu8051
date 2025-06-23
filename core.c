@@ -638,16 +638,19 @@ uint8_t decode(struct em8051 *aCPU, uint16_t aPosition, char *aBuffer)
 void disasm_setptrs(struct em8051 *aCPU);
 void op_setptrs(struct em8051 *aCPU);
 
-void reset(struct em8051 *aCPU, bool aWipe)
+void reset(struct em8051 *aCPU, bool aWipeRAM, bool aWipeROM)
 {
-    // clear memory, set registers to bootup values, etc    
-    if (aWipe)
-    {
-        memset(aCPU->mCodeMem, 0, aCPU->mCodeMemMaxIdx+1);
+    if (aWipeRAM) {
         memset(aCPU->mExtData, 0, aCPU->mExtDataMaxIdx+1);
         memset(aCPU->mLowerData, 0, 128);
-        if (aCPU->mUpperData) 
+        if (aCPU->mUpperData)
             memset(aCPU->mUpperData, 0, 128);
+    }
+
+    // clear memory, set registers to bootup values, etc
+    if (aWipeROM)
+    {
+        memset(aCPU->mCodeMem, 0, aCPU->mCodeMemMaxIdx+1);
     }
 
     memset(aCPU->mSFR, 0, 128);
@@ -663,11 +666,11 @@ void reset(struct em8051 *aCPU, bool aWipe)
     // Power-off flag will be 1 only after a power on (cold reset).
     // A warm reset doesn’t affect the value of this bit
     // ... Therefore, we only set it if aWipe is 1
-    if (aWipe)
+    if (aWipeRAM || aWipeROM)
         aCPU->mSFR[REG_PCON] |= (1<<4);
 
     // Random values
-    if (aWipe)
+    if (aWipeRAM || aWipeROM)
         aCPU->mSFR[REG_SBUF] = rand();
 
     // build function pointer lists

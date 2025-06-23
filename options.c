@@ -41,9 +41,9 @@ int opt_exception_iret_psw = 1;
 int opt_exception_acc_to_a = 1;
 int opt_exception_stack = 1;
 int opt_exception_invalid = 1;
-int opt_input_outputlow = 1;
+int opt_input_outputlow = 0;
 int opt_clock_select = 3;
-int opt_clock_hz = 12*1000*1000;
+unsigned int opt_clock_hz = 12*1000*1000;
 int opt_step_instruction = 0;
 
 int clockspeeds[] = { 

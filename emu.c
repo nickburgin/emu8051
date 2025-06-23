@@ -67,7 +67,7 @@ unsigned int clocks = 0;
 int view = MAIN_VIEW;
 
 // old port out values
-int pout[4] = { 0 };
+int pout[4] = { 1 };
 
 int breakpoint = -1;
 
@@ -173,44 +173,72 @@ uint8_t emu_sfrread(struct em8051 *aCPU, uint8_t aRegister)
 {
     int outputbyte = -1;
 
-    if (view == LOGICBOARD_VIEW)
+    // Logically disconnect any pins that aren't specifically handled elsewhere
+    return 0xff & aCPU->mSFR[aRegister - 0x80];
+
+    static char buff[34];
+
+    if (aRegister == REG_P0 + 0x80)
     {
-        if (aRegister == REG_P0 + 0x80)
-        {
-            outputbyte = pout[0];
-        }
-        if (aRegister == REG_P1 + 0x80)
-        {
-            outputbyte = pout[1];
-        }
-        if (aRegister == REG_P2 + 0x80)
-        {
-            outputbyte = pout[2];
-        }
-        if (aRegister == REG_P3 + 0x80)
-        {
-            outputbyte = pout[3];
-        }
+        sprintf(buff, "P0 port read\n %02x  %u %u %u %u %u %u %u %u",
+          aCPU->mSFR[aRegister - 0x80],
+          (aCPU->mSFR[aRegister - 0x80] >> 7) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 6) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 5) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 4) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 3) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 2) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 1) & 1,
+          aCPU->mSFR[aRegister - 0x80] & 1
+        );
+        outputbyte = pout[0] = emu_readvalue(aCPU, buff, pout[0], 2);
     }
-    else
+    if (aRegister == REG_P1 + 0x80)
     {
-        if (aRegister == REG_P0 + 0x80)
-        {
-            outputbyte = pout[0] = emu_readvalue(aCPU, "P0 port read", pout[0], 2);
-        }
-        if (aRegister == REG_P1 + 0x80)
-        {
-            outputbyte = pout[1] = emu_readvalue(aCPU, "P1 port read", pout[1], 2);
-        }
-        if (aRegister == REG_P2 + 0x80)
-        {
-            outputbyte = pout[2] = emu_readvalue(aCPU, "P2 port read", pout[2], 2);
-        }
-        if (aRegister == REG_P3 + 0x80)
-        {
-            outputbyte = pout[3] = emu_readvalue(aCPU, "P3 port read", pout[3], 2);
-        }
+        sprintf(buff, "P1 port read\n %02x  %u %u %u %u %u %u %u %u",
+          aCPU->mSFR[aRegister - 0x80],
+          (aCPU->mSFR[aRegister - 0x80] >> 7) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 6) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 5) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 4) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 3) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 2) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 1) & 1,
+          aCPU->mSFR[aRegister - 0x80] & 1
+        );
+        outputbyte = pout[1] = emu_readvalue(aCPU, buff, pout[1], 2);
     }
+    if (aRegister == REG_P2 + 0x80)
+    {
+        sprintf(buff, "P2 port read\n %02x  %u %u %u %u %u %u %u %u",
+          aCPU->mSFR[aRegister - 0x80],
+          (aCPU->mSFR[aRegister - 0x80] >> 7) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 6) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 5) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 4) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 3) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 2) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 1) & 1,
+          aCPU->mSFR[aRegister - 0x80] & 1
+        );
+        outputbyte = pout[2] = emu_readvalue(aCPU, buff, pout[2], 2);
+    }
+    if (aRegister == REG_P3 + 0x80)
+    {
+        sprintf(buff, "P3 port read\n %02x  %u %u %u %u %u %u %u %u",
+          aCPU->mSFR[aRegister - 0x80],
+          (aCPU->mSFR[aRegister - 0x80] >> 7) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 6) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 5) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 4) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 3) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 2) & 1,
+          (aCPU->mSFR[aRegister - 0x80] >> 1) & 1,
+          aCPU->mSFR[aRegister - 0x80] & 1
+        );
+        outputbyte = pout[3] = emu_readvalue(aCPU, buff, pout[3], 2);
+    }
+
     if (outputbyte != -1)
     {
         if (opt_input_outputlow == 1)
@@ -286,17 +314,21 @@ int main(int parc, char ** pars)
     emu.mExtData     = calloc(emu.mExtDataMaxIdx+1, sizeof(unsigned char));
     emu.mUpperData   = calloc(128, sizeof(unsigned char));
     emu.except       = &emu_exception;
-    emu.xread = NULL;
-    emu.xwrite = NULL;
+    emu.xread        = extmem_read;
+    emu.xwrite       = extmem_write;
 
     emu.sfrwrite[REG_SBUF] = emu_sfrwrite_SBUF;
+
+    emu.sfrbitread[REG_P3 + 0] = rx_port_read;
+    emu.sfrbitread[REG_P3 + 1] = tx_port_read;
+    emu.sfrbitread[REG_P3 + 4] = adc_status_read;
 
     emu.sfrread[REG_P0] = emu_sfrread;
     emu.sfrread[REG_P1] = emu_sfrread;
     emu.sfrread[REG_P2] = emu_sfrread;
     emu.sfrread[REG_P3] = emu_sfrread;
 
-    reset(&emu, 1);
+    reset(&emu, true, true);
 
     if (parc > 1)
     {
@@ -541,11 +573,11 @@ int main(int parc, char ** pars)
             break;
         case 'z':
 	    // Equivalent of "R)eset (init regs, set PC to zero)"
-	    reset(&emu, 0);
+	    reset(&emu, false, false);
 	    break;
         case 'Z':
 	    // Equivalent of "W)ipe (init regs, set PC to zero, clear memory)"
-	    reset(&emu, 1);
+	    reset(&emu, true, false);
 	    break;
         case KEY_END:
             clocks = 0;
@@ -601,7 +633,7 @@ int main(int parc, char ** pars)
                         targetclocks--;
                         clocks += 12;
                         ticked = tick(&emu);
-                        logicboard_tick(&emu);
+                        eml_tick(&emu);
                     }
                 }
                 else
@@ -609,7 +641,7 @@ int main(int parc, char ** pars)
                     targetclocks--;
                     clocks += 12;
                     ticked = tick(&emu);
-                    logicboard_tick(&emu);
+                    eml_tick(&emu);
                 }
 
                 if (emu.mPC == breakpoint)

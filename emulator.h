@@ -72,7 +72,7 @@ extern int opt_exception_acc_to_a;
 extern int opt_exception_stack;
 extern int opt_exception_invalid;
 extern int opt_clock_select;
-extern int opt_clock_hz;
+extern unsigned int opt_clock_hz;
 extern int opt_step_instruction;
 extern int opt_input_outputlow;
 
@@ -100,12 +100,18 @@ extern void build_main_view(struct em8051 *aCPU);
 extern void wipe_main_view();
 extern void mainview_update(struct em8051 *aCPU);
 
-// logicboard.c
+// eml.c
 extern void wipe_logicboard_view();
 extern void build_logicboard_view(struct em8051 *aCPU);
 extern void logicboard_editor_keys(struct em8051 *aCPU, int ch);
 extern void logicboard_update(struct em8051 *aCPU);
-extern void logicboard_tick(struct em8051 *aCPU);
+extern void eml_tick(struct em8051 *aCPU);
+extern uint8_t rx_port_read(struct em8051 *aCPU, uint8_t aRegister);
+extern uint8_t tx_port_read(struct em8051 *aCPU, uint8_t aRegister);
+extern uint8_t adc_status_read(struct em8051 *aCPU, uint8_t aRegister);
+extern void extmem_write(struct em8051 *aCPU, uint16_t aAddress, uint8_t aValue);
+extern uint8_t extmem_read(struct em8051 *aCPU, uint16_t aAddress);
+extern void on_reset(bool cold);
 
 // memeditor.c
 extern void wipe_memeditor_view();

@@ -389,10 +389,12 @@ int emu_reset(struct em8051 *aCPU)
     wmove(exc, 2, 2);
     waddstr(exc, "S)et PC = 0");
     wmove(exc, 3, 2);
-    waddstr(exc, "R)eset (init regs, set PC to zero)");
+    waddstr(exc, "H)ot Reset (init regs, set PC to zero)");
     wmove(exc, 4, 2);
-    waddstr(exc, "W)ipe (init regs, set PC to zero, clear memory)");
-    wmove(exc, 6, 2);
+    waddstr(exc, "W)arm Reset (init regs, set PC to zero, clear internal memory");
+    wmove(exc, 5, 2);
+    waddstr(exc, "C)old Reset (init regs, set PC to zero, clear internal memory and static memory)");
+    wmove(exc, 7, 2);
     waddstr(exc, "z/Z from main screen are shortcuts to HOME+R or HOME+W");
     wrefresh(exc);
 
@@ -405,14 +407,22 @@ int emu_reset(struct em8051 *aCPU)
         aCPU->mPC = 0;
         result = 1;
         break;
-    case 'r':
-    case 'R':
-        reset(aCPU, 0);
+    case 'h':
+    case 'H':
+        reset(aCPU, false, false);
+        on_reset(false);
         result = 1;
         break;
     case 'w':
     case 'W':
-        reset(aCPU, 1);
+        reset(aCPU, true, false);
+        on_reset(false);
+        result = 1;
+        break;
+    case 'c':
+    case 'C':
+        reset(aCPU, true, false);
+        on_reset(true);
         result = 1;
         break;
     }
